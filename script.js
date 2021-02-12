@@ -54,9 +54,9 @@ class Player
 
         if(mouse.x != this.x)
         {
-            this.x -= dx/25;
+            this.x -= dx/5;
         }
-        if(mouse.y != this.y/25)
+        if(mouse.y != this.y/5)
         {
             this.y -= dy;
         }
@@ -91,15 +91,17 @@ class Bug
     constructor()
     {
         this.x= Math.random() * canvas.width;
-        this.y= Math.random() * canvas.height;
+        this.y= canvas.height + 100;
         this.radius = 50;
-        this.speed = Math.random() * 5 + 1;
+        this.speed = Math.random() * 1 + 1;
         this.distance; 
 
     }
     update()
     {
         this.y -= this.speed;
+        const dx = this.x - player.x;
+        const dy = this.x - player.y; 
     }
 
     draw()
@@ -124,6 +126,17 @@ function handleBugs()
         bugsArray[i].update();
         bugsArray[i].draw();
     }
+    for(let i =0; i < bugsArray.length; i++)
+    {
+        if(bugsArray[i].y <0 - this.radius *2)
+        {
+            bugsArray.splice(i, 1);
+        }
+        if(bugsArray[i].distance < bugsArray[i].radius + player.radius)
+        {
+            console.log('collision');
+        }
+    }
 }
 
 //Animation Loop
@@ -133,6 +146,8 @@ function animate()
     handleBugs();
     player.update();
     player.draw();
+    ctx.fillStyle = 'black';
+    ctx.fillText('Bugs Squashed: ' + score, 5, 50, 150);
     gameFrame++; 
     requestAnimationFrame(animate);
 }
