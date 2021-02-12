@@ -54,9 +54,9 @@ class Player
 
         if(mouse.x != this.x)
         {
-            this.x -= dx/35;
+            this.x -= dx/25;
         }
-        if(mouse.y != this.y/35)
+        if(mouse.y != this.y/25)
         {
             this.y -= dy;
         }
@@ -83,12 +83,57 @@ class Player
 
 const player = new Player();
 
+//Bugs 
+const bugsArray = [];
+
+class Bug
+{
+    constructor()
+    {
+        this.x= Math.random() * canvas.width;
+        this.y= Math.random() * canvas.height;
+        this.radius = 50;
+        this.speed = Math.random() * 5 + 1;
+        this.distance; 
+
+    }
+    update()
+    {
+        this.y -= this.speed;
+    }
+
+    draw()
+    {
+        ctx.fillStyle = 'green';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI *2);
+        ctx.fill();
+        ctx.closePath();
+        ctx.stroke();
+    }
+}
+
+function handleBugs()
+{
+    if(gameFrame % 50 == 0)
+    {
+        bugsArray.push(new Bug());
+    }
+    for(let i =0; i < bugsArray.length; i++)
+    {
+        bugsArray[i].update();
+        bugsArray[i].draw();
+    }
+}
+
 //Animation Loop
 function animate()
 {
     ctx.clearRect(0,0,canvas.width, canvas.height);
+    handleBugs();
     player.update();
     player.draw();
+    gameFrame++; 
     requestAnimationFrame(animate);
 }
 
