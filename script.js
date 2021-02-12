@@ -94,14 +94,16 @@ class Bug
         this.y= canvas.height + 100;
         this.radius = 50;
         this.speed = Math.random() * 1 + 1;
-        this.distance; 
+        this.distance;
+        this.counted = false;  
 
     }
     update()
     {
         this.y -= this.speed;
         const dx = this.x - player.x;
-        const dy = this.x - player.y; 
+        const dy = this.y - player.y; 
+        this.distance = Math.sqrt(dx*dx + dy*dy);
     }
 
     draw()
@@ -134,7 +136,12 @@ function handleBugs()
         }
         if(bugsArray[i].distance < bugsArray[i].radius + player.radius)
         {
-            console.log('collision');
+            if(!bugsArray[i].counted)
+            {
+                score++;
+                bugsArray[i].counted = true; 
+                bugsArray.splice(i, 1);
+            }
         }
     }
 }
