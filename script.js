@@ -33,6 +33,10 @@ canvas.addEventListener('mouseup', function()
 })
 
 //Player
+
+const boot = new Image();
+boot.src = 'boot.png';
+
 class Player
 {
     constructor()
@@ -72,11 +76,8 @@ class Player
             ctx.lineTo(mouse.x, mouse.y);
             ctx.stroke();
         }
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
+        ctx.drawImage(boot, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, 
+            this.spriteWidth, this.spriteHeight, this.x - 45, this.y -35, this.spriteWidth/4, this.spriteHeight/4);
     }
 
 }  
@@ -85,6 +86,8 @@ const player = new Player();
 
 //Bugs 
 const bugsArray = [];
+const spider = new Image();
+spider.src = 'spider.png';
 
 class Bug
 {
@@ -114,6 +117,9 @@ class Bug
         ctx.fill();
         ctx.closePath();
         ctx.stroke();
+
+        ctx.drawImage(spider, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, 
+            this.spriteWidth, this.spriteHeight, this.x, this.y, this.spriteWidth/4, this.spriteHeight/4);
     }
 }
 
@@ -130,22 +136,31 @@ function handleBugs()
     {
         bugsArray[i].update();
         bugsArray[i].draw();
+        if(bugsArray[i].y < 0 - this.radius *2)
+        {
+            bugsArray.splice(i, 1);
+            i--;
+        }
+     
+        else if(bugsArray[i].distance < bugsArray[i].radius + player.radius)
+            {
+                if(!bugsArray[i].counted)
+                {
+                    squash.play();
+                    score++;
+                    bugsArray[i].counted = true; 
+                    bugsArray.splice(i, 1);
+                    i--;
+                 }
+            }
+
     }
     for(let i =0; i < bugsArray.length; i++)
     {
-        if(bugsArray[i].y <0 - this.radius *2)
-        {
-            bugsArray.splice(i, 1);
-        }
+       
         if(bugsArray[i].distance < bugsArray[i].radius + player.radius)
         {
-            squash.play();
-            if(!bugsArray[i].counted)
-            {
-                score++;
-                bugsArray[i].counted = true; 
-                bugsArray.splice(i, 1);
-            }
+            
         }
     }
 }
@@ -164,3 +179,7 @@ function animate()
 }
 
 animate();
+
+window.addEventListener('resize', function(){
+    canvasPosition = canvas.getBoundingClientRect();
+});
