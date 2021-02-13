@@ -117,6 +117,9 @@ class Bug
     }
 }
 
+const squash = document.createElement('audio');
+squash.src = 'impactsplat03.mp3.flac';
+
 function handleBugs()
 {
     if(gameFrame % 50 == 0)
@@ -136,6 +139,7 @@ function handleBugs()
         }
         if(bugsArray[i].distance < bugsArray[i].radius + player.radius)
         {
+            squash.play();
             if(!bugsArray[i].counted)
             {
                 score++;
